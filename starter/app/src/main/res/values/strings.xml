@@ -3,5 +3,7 @@
     <string name="app_name">Political Preparedness</string>
     <string name="btn_launch_elections">Upcoming Elections</string>
     <string name="btn_launch_find_my">Find my Representetives</string>
+    <string name="upcoming_elections_text">Upcoming Elections</string>
+    <string name="saved_elections_text">Saved Elections</string>
 
 </resources>

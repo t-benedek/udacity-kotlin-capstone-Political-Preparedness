@@ -1,0 +1,40 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="election"
+            type="com.example.android.politicalpreparedness.network.models.Election" />
+        <variable
+            name="clickListener"
+            type="com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter.ElectionListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:onClick="@{() ->clickListener.onClick(election)}"
+        tools:background="@color/white">
+
+        <TextView
+            android:id="@+id/asteroid_codename"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            android:text="@{election.name}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/asteroid_date"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@{election.electionDay.toString()}"
+            android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/asteroid_codename" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
