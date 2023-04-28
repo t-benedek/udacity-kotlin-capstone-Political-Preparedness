@@ -24,7 +24,7 @@ class ElectionsViewModel(): ViewModel() {
     private val application = App.context
 
     private var _navigateToElectionDetail = MutableLiveData<Election>()
-    private val navigateToElectionDetails:LiveData<Election?>
+    val navigateToElectionDetails:LiveData<Election?>
             get() = _navigateToElectionDetail
 
     val elections:LiveData<List<Election>?> = repo.elections
@@ -54,6 +54,10 @@ class ElectionsViewModel(): ViewModel() {
             }
             _navigateToElectionDetail.value = election
         }
+    }
+
+    fun onElectionDetailNavigated(){
+        _navigateToElectionDetail.value = null
     }
 
     private fun isNetworkAvailable(): Boolean {

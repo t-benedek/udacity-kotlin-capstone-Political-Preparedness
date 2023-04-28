@@ -10,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 import com.example.android.politicalpreparedness.databinding.FragmentLaunchBinding
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
@@ -24,7 +26,6 @@ class ElectionsFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
 
         val binding = FragmentElectionBinding.inflate(inflater)
         binding.lifecycleOwner = this
@@ -44,6 +45,16 @@ class ElectionsFragment: Fragment() {
                 Log.i(LOGTAG, "Update Viewmodel " + it.toString())
             }
         })
+
+        viewModel.navigateToElectionDetails.observe(viewLifecycleOwner) { election ->
+            election?.let {
+
+                findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToElectionsDetailFragment())
+
+                //tell the fragment that navigation was done
+                this.viewModel.onElectionDetailNavigated()
+            }
+        }
 
         //TODO: Populate recycler adapters
         binding.upcomingElectionsRecycler.adapter = adapter
