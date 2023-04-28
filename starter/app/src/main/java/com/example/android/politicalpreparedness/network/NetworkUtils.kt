@@ -19,7 +19,7 @@ import java.util.*
                 val election = Election (
                     id,
                     name,
-                    Date(1-1-2023),
+                    Date(23,1,1),
                     Division("DivID", "Germany", "Bayern")
                 )
                 electionList.add(election)

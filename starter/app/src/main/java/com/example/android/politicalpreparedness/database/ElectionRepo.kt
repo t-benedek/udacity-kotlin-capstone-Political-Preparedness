@@ -18,9 +18,7 @@ class ElectionRepo(private val database: ElectionDao) {
     suspend fun refreshElections() {
         try {
             Log.i(LOGTAG, "Refresh Elections")
-            val response = CivicsApi.retrofitService.getAllElections(API_KEY)
-            val jsonObject = JSONObject(response)
-            val list = parseElectionJsonResult(jsonObject)
+            val list = CivicsApi.retrofitService.getElections().elections
             for (a in list) {
                 database.insert(a)
                 Log.i(LOGTAG, "Adding Election with name " + a.name)
