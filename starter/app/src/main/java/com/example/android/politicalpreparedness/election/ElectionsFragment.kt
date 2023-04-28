@@ -1,21 +1,16 @@
 package com.example.android.politicalpreparedness.election
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
-import com.example.android.politicalpreparedness.databinding.FragmentLaunchBinding
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
-import com.example.android.politicalpreparedness.network.models.Election
 
 private const val LOGTAG = "ElectionFrag"
 
@@ -33,15 +28,18 @@ class ElectionsFragment: Fragment() {
 
         //TODO: Link elections to voter info
 
-        //TODO: Initiate recycler adapters
-        val application = requireNotNull(this.activity).application
-        val adapter = ElectionListAdapter(ElectionListAdapter.ElectionListener { electionID ->
+
+        val upComingAdapter = ElectionListAdapter(ElectionListAdapter.ElectionListener { electionID ->
+            viewModel.onElectionClicked(electionID)
+        })
+
+        val savedAdapter = ElectionListAdapter(ElectionListAdapter.ElectionListener { electionID ->
             viewModel.onElectionClicked(electionID)
         })
 
         viewModel.elections.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.submitList(it)
+                upComingAdapter.submitList(it)
             }
         })
 
@@ -57,8 +55,9 @@ class ElectionsFragment: Fragment() {
             }
         }
 
-        //TODO: Populate recycler adapters
-        binding.upcomingElectionsRecycler.adapter = adapter
+        binding.upcomingElectionsRecycler.adapter = upComingAdapter
+        binding.savedElectionsRecycler.adapter = savedAdapter
+
         return binding.root
     }
 
