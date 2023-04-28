@@ -30,6 +30,8 @@ class ElectionDetailsFragment : Fragment() {
             val elDivision = ElectionDetailsFragmentArgs.fromBundle(arguments!!).division
 
             binding.electionName = elName
+            binding.electionDate = elDate
+            binding.division = elDivision
             return binding.root
         }
 }
