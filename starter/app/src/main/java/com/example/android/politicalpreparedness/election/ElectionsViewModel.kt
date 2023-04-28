@@ -27,8 +27,7 @@ class ElectionsViewModel(): ViewModel() {
     private val navigateToElectionDetails:LiveData<Election?>
             get() = _navigateToElectionDetail
 
-    var elections:LiveData<List<Election>?> = repo.elections
-
+    val elections:LiveData<List<Election>?> = repo.elections
 
     //TODO: Create live data val for saved elections
 
@@ -37,12 +36,11 @@ class ElectionsViewModel(): ViewModel() {
     //TODO: Create functions to navigate to saved or upcoming election voter info
     init {
         _navigateToElectionDetail.value = null
-        val el1 = Election(1, "Test", Date(1-1-2023), Division("1", "GER", "BY"))
-        val list =  listOf(el1)
-
         viewModelScope.launch {
             try {
-                if (isNetworkAvailable())  repo.refreshElections()
+                if (isNetworkAvailable()) {
+                    repo.refreshElections()
+                }
             } catch (e:java.lang.Exception) {
                 Log.e("ElectionsViewModel", "exception thrown: ${e.localizedMessage}")
             }

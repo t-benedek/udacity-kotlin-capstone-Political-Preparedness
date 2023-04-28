@@ -21,8 +21,8 @@
             android:id="@+id/asteroid_codename"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@android:color/white"
             android:text="@{election.name}"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@{election.electionDay.toString()}"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/asteroid_codename" />
 

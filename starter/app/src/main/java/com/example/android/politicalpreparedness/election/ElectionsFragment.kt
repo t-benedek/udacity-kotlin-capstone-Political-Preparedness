@@ -1,19 +1,24 @@
 package com.example.android.politicalpreparedness.election
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 import com.example.android.politicalpreparedness.databinding.FragmentLaunchBinding
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
+import com.example.android.politicalpreparedness.network.models.Election
+
+private const val LOGTAG = "ElectionFrag"
 
 class ElectionsFragment: Fragment() {
 
-    //TODO: Declare ViewModel
     private val viewModel by viewModels<ElectionsViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater,
@@ -33,10 +38,15 @@ class ElectionsFragment: Fragment() {
             viewModel.onElectionClicked(electionID)
         })
 
-        binding.upcomingElectionsRecycler.adapter = adapter
+        viewModel.elections.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                adapter.submitList(it)
+                Log.i(LOGTAG, "Update Viewmodel " + it.toString())
+            }
+        })
 
         //TODO: Populate recycler adapters
-
+        binding.upcomingElectionsRecycler.adapter = adapter
         return binding.root
     }
 
