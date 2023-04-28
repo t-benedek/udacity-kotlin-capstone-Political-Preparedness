@@ -42,14 +42,15 @@ class ElectionsFragment: Fragment() {
         viewModel.elections.observe(viewLifecycleOwner, Observer {
             it?.let {
                 adapter.submitList(it)
-                Log.i(LOGTAG, "Update Viewmodel " + it.toString())
             }
         })
 
         viewModel.navigateToElectionDetails.observe(viewLifecycleOwner) { election ->
             election?.let {
 
-                findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToElectionsDetailFragment())
+                findNavController()
+                    .navigate(ElectionsFragmentDirections
+                        .actionElectionsFragmentToElectionsDetailFragment(election.name, election.electionDay.toString(), election.division))
 
                 //tell the fragment that navigation was done
                 this.viewModel.onElectionDetailNavigated()

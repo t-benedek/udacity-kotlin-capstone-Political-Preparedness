@@ -42,11 +42,24 @@
         <action
             android:id="@+id/action_electionsFragment_to_electionsDetailFragment"
             app:destination="@id/electionsDetailFragment" />
+
     </fragment>
 
     <fragment
         android:id="@+id/electionsDetailFragment"
         android:name="com.example.android.politicalpreparedness.election.ElectionDetailsFragment"
-        android:label="fragment_elections_detail"/>
+        android:label="fragment_elections_detail">
+        <argument
+            android:name="electionName"
+            app:argType="string" />
+        <argument
+            android:name="electionDate"
+            app:argType="string" />
+        <argument
+            android:name="division"
+            app:argType="com.example.android.politicalpreparedness.network.models.Division" />
+
+
+    </fragment>
 
 </navigation>
