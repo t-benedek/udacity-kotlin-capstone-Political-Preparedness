@@ -14,6 +14,10 @@ interface ElectionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(election: Election)
 
+
+    @Query("SELECT * FROM election_table WHERE ID=:id")
+    fun getElection(id:Int): Election?
+
     @Query("SELECT * FROM election_table")
     fun getAllElections(): LiveData<List<Election>?>
 
@@ -23,6 +27,5 @@ interface ElectionDao {
     @Query("DELETE FROM election_table")
     suspend fun clearElections()
 
-//    @Query("SELECT * FROM election_table WHERE ID=:id")
-//    suspend fun getElection(id:Int): LiveData<Election>
+
 }

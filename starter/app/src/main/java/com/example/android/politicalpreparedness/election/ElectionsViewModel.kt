@@ -17,6 +17,7 @@ import com.example.android.politicalpreparedness.network.models.Election
 import kotlinx.coroutines.launch
 import java.sql.Date
 
+private const val TAG = "ELECTION_VIEWMODEL"
 class ElectionsViewModel(): ViewModel() {
 
     private val electionDao = ElectionDatabase.getInstance(App.context).electionDao
@@ -27,23 +28,41 @@ class ElectionsViewModel(): ViewModel() {
     val navigateToElectionDetails:LiveData<Election?>
             get() = _navigateToElectionDetail
 
-    val elections:LiveData<List<Election>?> = repo.elections
+    private var _elections = MutableLiveData<List<Election>>()
+    val elections:LiveData<List<Election>?>
+        get() = _elections
 
-    //TODO: Create live data val for saved elections
-
-    //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
+    lateinit var saved_elections:LiveData<List<Election>?>
 
     //TODO: Create functions to navigate to saved or upcoming election voter info
     init {
         _navigateToElectionDetail.value = null
+        loadSavedElections()
+        loadAllElections()
+
+    }
+
+    private fun loadAllElections() {
         viewModelScope.launch {
             try {
                 if (isNetworkAvailable()) {
-                    repo.refreshElections()
+                    _elections.value = repo.getAllElections()
                 }
-            } catch (e:java.lang.Exception) {
+            } catch (e: java.lang.Exception) {
                 Log.e("ElectionsViewModel", "exception thrown: ${e.localizedMessage}")
             }
+        }
+    }
+
+    fun loadSavedElections() {
+        viewModelScope.launch {
+            try {
+                saved_elections = repo.getSavedElections()
+
+            } catch (e: Exception) {
+                Log.d(TAG, e.printStackTrace().toString())
+            }
+
         }
     }
     fun onElectionClicked(electionID: Int) {

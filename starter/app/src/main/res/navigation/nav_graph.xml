@@ -58,6 +58,9 @@
         <argument
             android:name="division"
             app:argType="com.example.android.politicalpreparedness.network.models.Division" />
+        <argument
+            android:name="electionID"
+            app:argType="integer" />
 
 
     </fragment>

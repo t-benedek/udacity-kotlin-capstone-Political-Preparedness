@@ -6,12 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.android.politicalpreparedness.App
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.database.ElectionRepo
 import com.example.android.politicalpreparedness.databinding.FragmentElectionDetailsBinding
+import com.example.android.politicalpreparedness.network.models.Election
+import kotlinx.coroutines.*
 
+private const val LOGTAG = "ElectionDetail"
 class ElectionDetailsFragment : Fragment() {
 
     private val electionDao = ElectionDatabase.getInstance(App.context).electionDao
@@ -22,9 +25,7 @@ class ElectionDetailsFragment : Fragment() {
             val binding = FragmentElectionDetailsBinding.inflate(inflater)
             binding.lifecycleOwner = this
 
-            // TODO Add binding
-            val list = repo.elections.value
-            var el = list?.get(0)
+            val elID = ElectionDetailsFragmentArgs.fromBundle(arguments!!).electionID
             val elName = ElectionDetailsFragmentArgs.fromBundle(arguments!!).electionName
             val elDate = ElectionDetailsFragmentArgs.fromBundle(arguments!!).electionDate
             val elDivision = ElectionDetailsFragmentArgs.fromBundle(arguments!!).division
@@ -32,6 +33,27 @@ class ElectionDetailsFragment : Fragment() {
             binding.electionName = elName
             binding.electionDate = elDate
             binding.division = elDivision
+
+            binding.followElectionButton.setOnClickListener {
+                followElection(elID)
+            }
             return binding.root
         }
+
+    private fun followElection(elID: Int) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                val list = repo.getAllElections()
+                for (el in list) {
+                    if (el.id == elID) {
+                        repo.saveElection(el)
+                        Log.i(LOGTAG, "Election Saved " + el?.name)
+                    }
+                }
+
+            }
+        }
+    }
+
+
 }

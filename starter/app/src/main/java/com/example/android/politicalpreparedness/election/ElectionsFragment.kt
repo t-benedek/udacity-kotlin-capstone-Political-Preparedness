@@ -43,12 +43,18 @@ class ElectionsFragment: Fragment() {
             }
         })
 
+        viewModel.saved_elections.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                savedAdapter.submitList(it)
+            }
+        })
+
         viewModel.navigateToElectionDetails.observe(viewLifecycleOwner) { election ->
             election?.let {
 
                 findNavController()
                     .navigate(ElectionsFragmentDirections
-                        .actionElectionsFragmentToElectionsDetailFragment(election.name, election.electionDay.toString(), election.division))
+                        .actionElectionsFragmentToElectionsDetailFragment(election.name, election.electionDay.toString(), election.division, election.id))
 
                 //tell the fragment that navigation was done
                 this.viewModel.onElectionDetailNavigated()
@@ -56,11 +62,9 @@ class ElectionsFragment: Fragment() {
         }
 
         binding.upcomingElectionsRecycler.adapter = upComingAdapter
-        // binding.savedElectionsRecycler.adapter = savedAdapter
+        binding.savedElectionsRecycler.adapter = savedAdapter
 
         return binding.root
     }
-
-    /// TODO: Refresh adapters when fragment loads
 
 }
