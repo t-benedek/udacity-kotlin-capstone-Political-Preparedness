@@ -95,7 +95,7 @@
             android:id="@+id/follow_election_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/follow_election"
+            app:dataSavedState="@{viewmodel.savedState}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

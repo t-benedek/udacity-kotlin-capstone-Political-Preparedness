@@ -14,7 +14,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class VoterInfoViewModel(
-    private val dataSource: ElectionDao, private val electionId: Int,
+    private val dataSource: ElectionDao,
+    private val electionId: Int,
     private val electionName: String
 ) : ViewModel() {
 

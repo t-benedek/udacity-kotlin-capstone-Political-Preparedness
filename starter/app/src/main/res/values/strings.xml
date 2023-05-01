@@ -10,5 +10,7 @@
     <string name="link_label_voting_locations">Voting locations</string>
     <string name="link_label_ballot_information">State Ballot Information</string>
     <string name="header_label_correspondence_address">Correspondence Address</string>
+    <string name="button_label_unfollow_election">Unfollow Election</string>
+    <string name="button_label_follow_election">Follow Election</string>
 
 </resources>
