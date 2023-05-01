@@ -12,7 +12,7 @@ import com.example.android.politicalpreparedness.network.models.Election
 interface ElectionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(election: Election)
+    suspend fun insert(election: Election): Long
 
     @Query("SELECT * FROM election_table WHERE ID=:id")
     fun getElection(id:Int): Election?

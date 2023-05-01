@@ -12,8 +12,9 @@ class ElectionRepo(private val database: ElectionDao) {
     val API_KEY = "AIzaSyATWja6yd8IwqTpBf8Y4q0O3cqN8zLnwd8"
     lateinit var elections: List<Election>
 
-    suspend fun saveElection(el: Election) {
-        database.insert(el)
+    suspend fun saveElection(el: Election): Long? {
+        val insertId = database?.insert(el)
+        return insertId
     }
 
     suspend fun deleteElection(id: Int) {

@@ -78,10 +78,11 @@ class VoterInfoViewModel(
     private fun updateButtonState() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val election = electionsRepository.getElection(electionId)
+                election = electionsRepository.getElection(electionId)
             }
+            _savedState.value = election?.id == electionId
         }
-        _savedState.value = election?.id == electionId
+
     }
 
     fun updateElectionDataInDatabase() {
@@ -93,8 +94,11 @@ class VoterInfoViewModel(
                     _savedState.value = false
                 }
                 false -> {
-                    electionsRepository.saveElection(election!!)
-                    _savedState.value = true
+                    Log.i(TAG, "Adding election to Saved List " + election?.name)
+                    val insertId = electionsRepository.saveElection(election!!)
+                    if (insertId?.toInt() == election?.id) {
+                        _savedState.value = true
+                    }
                 }
             }
         }

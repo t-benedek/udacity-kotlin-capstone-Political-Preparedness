@@ -58,28 +58,6 @@ fun bindSearchStateToConstraintLayout(
     }
 }
 
-//@BindingAdapter("progressVisibilityState")
-//fun bindSearchStateToImageView(
-//    imageView: ImageView,
-//    searchState: ProgressState
-//) {
-//    when (searchState) {
-//        LOADING_ACTIVE -> {
-//            imageView.visibility = View.VISIBLE
-//            imageView.setImageResource(R.drawable.loading_animation)
-//        }
-//        LOADING_FAILURE -> {
-//            imageView.visibility = View.VISIBLE
-//            imageView.setImageResource(R.drawable.ic_connection_error)
-//            Snackbar.make(
-//                imageView,
-//                imageView.context.getString(R.string.loading_failure_snack),
-//                LENGTH_SHORT
-//            ).show()
-//        }
-//        else -> imageView.visibility = View.GONE
-//    }
-//}
 
 @BindingAdapter("textViewVisibilityState")
 fun bindSearchStateToTextView(
@@ -125,5 +103,28 @@ inline fun <reified T> toTypedAdapter(adapter: ArrayAdapter<*>): ArrayAdapter<T>
 //                    .circleCrop()
 //            )
 //            .into(imgView)
+//    }
+//}
+
+//@BindingAdapter("progressVisibilityState")
+//fun bindSearchStateToImageView(
+//    imageView: ImageView,
+//    searchState: ProgressState
+//) {
+//    when (searchState) {
+//        LOADING_ACTIVE -> {
+//            imageView.visibility = View.VISIBLE
+//            imageView.setImageResource(R.drawable.loading_animation)
+//        }
+//        LOADING_FAILURE -> {
+//            imageView.visibility = View.VISIBLE
+//            imageView.setImageResource(R.drawable.ic_connection_error)
+//            Snackbar.make(
+//                imageView,
+//                imageView.context.getString(R.string.loading_failure_snack),
+//                LENGTH_SHORT
+//            ).show()
+//        }
+//        else -> imageView.visibility = View.GONE
 //    }
 //}
