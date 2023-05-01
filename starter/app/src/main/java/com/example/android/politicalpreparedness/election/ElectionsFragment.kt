@@ -56,7 +56,7 @@ class ElectionsFragment: Fragment() {
         }
 
         binding.upcomingElectionsRecycler.adapter = upComingAdapter
-        binding.savedElectionsRecycler.adapter = savedAdapter
+        // binding.savedElectionsRecycler.adapter = savedAdapter
 
         return binding.root
     }
