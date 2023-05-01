@@ -25,35 +25,10 @@ class ElectionDetailsFragment : Fragment() {
             val binding = FragmentElectionDetailsBinding.inflate(inflater)
             binding.lifecycleOwner = this
 
-            val elID = ElectionDetailsFragmentArgs.fromBundle(arguments!!).electionID
-            val elName = ElectionDetailsFragmentArgs.fromBundle(arguments!!).electionName
-            val elDate = ElectionDetailsFragmentArgs.fromBundle(arguments!!).electionDate
-            val elDivision = ElectionDetailsFragmentArgs.fromBundle(arguments!!).division
-
-            binding.electionName = elName
-            binding.electionDate = elDate
-            binding.division = elDivision
-
-            binding.followElectionButton.setOnClickListener {
-                followElection(elID)
-            }
             return binding.root
         }
 
-    private fun followElection(elID: Int) {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                val list = repo.getAllElections()
-                for (el in list) {
-                    if (el.id == elID) {
-                        repo.saveElection(el)
-                        Log.i(LOGTAG, "Election Saved " + el?.name)
-                    }
-                }
 
-            }
-        }
-    }
 
 
 }

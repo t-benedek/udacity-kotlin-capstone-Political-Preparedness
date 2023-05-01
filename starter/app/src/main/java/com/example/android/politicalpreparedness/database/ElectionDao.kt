@@ -14,7 +14,6 @@ interface ElectionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(election: Election)
 
-
     @Query("SELECT * FROM election_table WHERE ID=:id")
     fun getElection(id:Int): Election?
 

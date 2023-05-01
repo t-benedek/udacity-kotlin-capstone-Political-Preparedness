@@ -3,6 +3,8 @@ package com.example.android.politicalpreparedness.database
 import androidx.lifecycle.LiveData
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.models.Election
+import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
+
 private const val LOGTAG = "REPO"
 
 class ElectionRepo(private val database: ElectionDao) {
@@ -33,6 +35,15 @@ class ElectionRepo(private val database: ElectionDao) {
 
     suspend fun clearDatabase() {
         database.clearElections()
+    }
+
+    suspend fun getVoterInfo(electionId: Int, electionName: String): VoterInfoResponse {
+        return CivicsApi.retrofitService.getVoterInfo (
+            mapOf(
+                "electionId" to electionId.toString(),
+                "address" to electionName
+            )
+        )
     }
 
 

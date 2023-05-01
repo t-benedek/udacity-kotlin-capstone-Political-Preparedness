@@ -1,21 +1,101 @@
 package com.example.android.politicalpreparedness.election
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.database.ElectionDao
+import com.example.android.politicalpreparedness.database.ElectionRepo
+import com.example.android.politicalpreparedness.network.models.*
+import com.example.android.politicalpreparedness.utils.ProgressState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
+class VoterInfoViewModel(
+    private val dataSource: ElectionDao, private val electionId: Int,
+    private val electionName: String
+) : ViewModel() {
 
-    //TODO: Add live data to hold voter info
+    companion object {
+        const val TAG = "VoterInfoViewModel"
+    }
 
-    //TODO: Add var and methods to populate voter info
+    private var election: Election? = null
 
-    //TODO: Add var and methods to support loading URLs
+    // The internal MutableLiveData to store VoterInfoResponse
+    private val _voterInfoResponse = MutableLiveData<VoterInfoResponse>()
 
-    //TODO: Add var and methods to save and remove elections to local database
-    //TODO: cont'd -- Populate initial state of save button to reflect proper action based on election saved status
+    // The external immutable LiveData for the VoterInfoResponse
+    val voterInfoResponse: LiveData<VoterInfoResponse>
+        get() = _voterInfoResponse
+
+    // The internal MutableLiveData to store boolean value that represents election data saved state.
+    private val _savedState = MutableLiveData<Boolean>()
+
+    // The external immutable LiveData
+    val savedState: LiveData<Boolean>
+        get() = _savedState
+
+    // The internal MutableLiveData to store state value that changes when API call is complete.
+    // Used for progress bar and recycler view visibility
+    private val _voterInfoLoadingState = MutableLiveData<ProgressState>()
+
+    // The external immutable LiveData
+    val voterInfoLoadingState: LiveData<ProgressState>
+        get() = _voterInfoLoadingState
+
+    private val electionsRepository = ElectionRepo(dataSource)
 
     /**
-     * Hint: The saved state can be accomplished in multiple ways. It is directly related to how elections are saved/removed from the database.
+     * init{} is called immediately after view model is created.
      */
+    init {
+        _voterInfoLoadingState.value = ProgressState.INITIAL
+        getVoterInfoFromApi()
+        updateButtonState()
+    }
 
+    private fun getVoterInfoFromApi() {
+        viewModelScope.launch {
+            _voterInfoLoadingState.value = ProgressState.LOADING_ACTIVE
+            try {
+
+                _voterInfoLoadingState.value = ProgressState.LOADING_SUCCESS
+                val voterInfoResponse = electionsRepository.getVoterInfo(electionId, electionName)
+                election = voterInfoResponse.election
+
+                _voterInfoResponse.value = voterInfoResponse
+            } catch (e: Exception) {
+                _voterInfoLoadingState.value = ProgressState.LOADING_FAILURE
+                Log.d(TAG, e.printStackTrace().toString())
+            }
+        }
+    }
+
+    private fun updateButtonState() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val election = electionsRepository.getElection(electionId)
+            }
+        }
+        _savedState.value = election?.id == electionId
+    }
+
+    fun updateElectionDataInDatabase() {
+        viewModelScope.launch {
+
+            when (_savedState.value) {
+                true -> {
+                    electionsRepository.deleteElection(election!!.id)
+                    _savedState.value = false
+                }
+                false -> {
+                    electionsRepository.saveElection(election!!)
+                    _savedState.value = true
+                }
+            }
+        }
+    }
 }

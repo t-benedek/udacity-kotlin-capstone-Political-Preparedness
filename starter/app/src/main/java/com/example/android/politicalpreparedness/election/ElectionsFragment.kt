@@ -26,9 +26,6 @@ class ElectionsFragment: Fragment() {
         binding.lifecycleOwner = this
         binding.viewmodel = viewModel
 
-        //TODO: Link elections to voter info
-
-
         val upComingAdapter = ElectionListAdapter(ElectionListAdapter.ElectionListener { electionID ->
             viewModel.onElectionClicked(electionID)
         })
@@ -54,7 +51,7 @@ class ElectionsFragment: Fragment() {
 
                 findNavController()
                     .navigate(ElectionsFragmentDirections
-                        .actionElectionsFragmentToElectionsDetailFragment(election.name, election.electionDay.toString(), election.division, election.id))
+                        .actionElectionsFragmentToVoterInfoFragment(election.id, election.division, election.name))
 
                 //tell the fragment that navigation was done
                 this.viewModel.onElectionDetailNavigated()
