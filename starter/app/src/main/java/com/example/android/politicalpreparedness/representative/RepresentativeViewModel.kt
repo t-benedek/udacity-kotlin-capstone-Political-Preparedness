@@ -1,26 +1,91 @@
 package com.example.android.politicalpreparedness.representative
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.android.politicalpreparedness.App
+import com.example.android.politicalpreparedness.database.ElectionDatabase
+import com.example.android.politicalpreparedness.database.ElectionRepo
+import com.example.android.politicalpreparedness.network.models.Address
+import com.example.android.politicalpreparedness.network.models.RepresentativeResponse
+import com.example.android.politicalpreparedness.representative.model.Representative
+import kotlinx.coroutines.launch
+import com.example.android.politicalpreparedness.utils.ProgressState
+import com.example.android.politicalpreparedness.utils.ProgressState.*
 
-class RepresentativeViewModel: ViewModel() {
+class RepresentativeViewModel : ViewModel() {
 
-    //TODO: Establish live data for representatives and address
 
-    //TODO: Create function to fetch representatives from API from a provided address
+    private val electionDao = ElectionDatabase.getInstance(App.context).electionDao
+    private val repo = ElectionRepo(electionDao)
 
-    /**
-     *  The following code will prove helpful in constructing a representative from the API. This code combines the two nodes of the RepresentativeResponse into a single official :
+    companion object {
+        const val TAG = "RepresentativeViewModel"
+    }
 
-    val (offices, officials) = getRepresentativesDeferred.await()
-    _representatives.value = offices.flatMap { office -> office.getRepresentatives(officials) }
+    var representativeResponse: RepresentativeResponse? = null
 
-    Note: getRepresentatives in the above code represents the method used to fetch data from the API
-    Note: _representatives in the above code represents the established mutable live data housing representatives
+    // The internal MutableLiveData that holds the data to be displayed on the UI
+    private val _representativesList = MutableLiveData<List<Representative>>()
 
-     */
+    // The external immutable LiveData
+    val representativesList: LiveData<List<Representative>>
+        get() = _representativesList
 
-    //TODO: Create function get address from geo location
+    // The internal MutableLiveData to store state value that changes when user clicks on search button,
+    // and when API call is complete. Used for progress bar, text info and recycler view visibility
+    private val _currentSearchState = MutableLiveData<ProgressState>()
 
-    //TODO: Create function to get address from individual fields
+    // The external immutable LiveData
+    val currentSearchState: LiveData<ProgressState>
+        get() = _currentSearchState
 
+    // The MutableLiveData that holds the data to be displayed on the UI
+    private val _locationAddress = MutableLiveData<Address>()
+    val locationAddress: LiveData<Address>
+        get() = _locationAddress
+
+    init {
+        _currentSearchState.value = INITIAL
+    }
+
+    fun searchRepresentatives(address: String) {
+        viewModelScope.launch {
+            _currentSearchState.value = LOADING_ACTIVE
+            try {
+                representativeResponse = repo.getRepresentatives(address)
+                setRepresentativesList()
+                _currentSearchState.value = LOADING_SUCCESS
+            } catch (e: Exception) {
+                _currentSearchState.value = LOADING_FAILURE
+                Log.d(TAG, e.printStackTrace().toString())
+            }
+
+        }
+    }
+
+    private fun setRepresentativesList() {
+        if (representativeResponse != null) {
+            _representativesList.value = representativeResponse!!.offices.flatMap { office ->
+                office.getRepresentatives(representativeResponse!!.officials)
+            }
+        }
+    }
+
+    fun fillInAddressForm(address: Address?) {
+        _locationAddress.value = address
+    }
+
+    fun onRestoreSearchProgressState(searchState: ProgressState?) {
+        _currentSearchState.value = searchState
+    }
+
+    fun onRestoreRecyclerViewData(recyclerViewData: RepresentativeResponse?) {
+        if (recyclerViewData != null) {
+            representativeResponse = recyclerViewData
+            setRepresentativesList()
+        }
+    }
 }

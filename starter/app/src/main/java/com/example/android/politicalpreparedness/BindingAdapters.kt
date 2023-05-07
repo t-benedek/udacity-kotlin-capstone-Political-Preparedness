@@ -10,6 +10,8 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.android.politicalpreparedness.utils.ProgressState
 import com.example.android.politicalpreparedness.utils.ProgressState.*
 import com.google.android.material.snackbar.Snackbar
@@ -90,41 +92,41 @@ inline fun <reified T> toTypedAdapter(adapter: ArrayAdapter<*>): ArrayAdapter<T>
 /**
  * Use Glide library to load an image from url into an [ImageView]
  */
-//@BindingAdapter("imageUrl")
-//fun bindUrlToImage(imgView: ImageView, imgUrl: String?) {
-//    imgUrl?.let {
-//        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
-//        Glide.with(imgView.context)
-//            .load(imgUri)
-//            .apply(
-//                RequestOptions()
-//                    .placeholder(R.drawable.ic_profile)
-//                    .error(R.drawable.ic_profile)
-//                    .circleCrop()
-//            )
-//            .into(imgView)
-//    }
-//}
+@BindingAdapter("imageUrl")
+fun bindUrlToImage(imgView: ImageView, imgUrl: String?) {
+    imgUrl?.let {
+        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+        Glide.with(imgView.context)
+            .load(imgUri)
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .error(R.drawable.ic_profile)
+                    .circleCrop()
+            )
+            .into(imgView)
+    }
+}
 
-//@BindingAdapter("progressVisibilityState")
-//fun bindSearchStateToImageView(
-//    imageView: ImageView,
-//    searchState: ProgressState
-//) {
-//    when (searchState) {
-//        LOADING_ACTIVE -> {
-//            imageView.visibility = View.VISIBLE
-//            imageView.setImageResource(R.drawable.loading_animation)
-//        }
-//        LOADING_FAILURE -> {
-//            imageView.visibility = View.VISIBLE
-//            imageView.setImageResource(R.drawable.ic_connection_error)
-//            Snackbar.make(
-//                imageView,
-//                imageView.context.getString(R.string.loading_failure_snack),
-//                LENGTH_SHORT
-//            ).show()
-//        }
-//        else -> imageView.visibility = View.GONE
-//    }
-//}
+@BindingAdapter("progressVisibilityState")
+fun bindSearchStateToImageView(
+    imageView: ImageView,
+    searchState: ProgressState
+) {
+    when (searchState) {
+        LOADING_ACTIVE -> {
+            imageView.visibility = View.VISIBLE
+            imageView.setImageResource(R.drawable.loading_animation)
+        }
+        LOADING_FAILURE -> {
+            imageView.visibility = View.VISIBLE
+            imageView.setImageResource(R.drawable.ic_connection_error)
+            Snackbar.make(
+                imageView,
+                imageView.context.getString(R.string.loading_failure_snack),
+                LENGTH_SHORT
+            ).show()
+        }
+        else -> imageView.visibility = View.GONE
+    }
+}
