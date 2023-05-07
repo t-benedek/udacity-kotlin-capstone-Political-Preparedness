@@ -49,9 +49,6 @@ class VoterInfoViewModel(
 
     private val electionsRepository = ElectionRepo(dataSource)
 
-    /**
-     * init{} is called immediately after view model is created.
-     */
     init {
         _voterInfoLoadingState.value = ProgressState.INITIAL
         getVoterInfoFromApi()
@@ -66,6 +63,7 @@ class VoterInfoViewModel(
                 _voterInfoLoadingState.value = ProgressState.LOADING_SUCCESS
                 val voterInfoResponse = electionsRepository.getVoterInfo(electionId, electionName)
                 election = voterInfoResponse.election
+                Log.i(TAG, "Got Voter Info from Repo " + election?.name)
 
                 _voterInfoResponse.value = voterInfoResponse
             } catch (e: Exception) {
@@ -95,9 +93,12 @@ class VoterInfoViewModel(
                 }
                 false -> {
                     Log.i(TAG, "Adding election to Saved List " + election?.name)
-                    val insertId = electionsRepository.saveElection(election!!)
-                    if (insertId?.toInt() == election?.id) {
-                        _savedState.value = true
+                    if (election != null) {
+                        val insertId = electionsRepository.saveElection(election!!)
+
+                        if (insertId?.toInt() == election?.id) {
+                            _savedState.value = true
+                        }
                     }
                 }
             }

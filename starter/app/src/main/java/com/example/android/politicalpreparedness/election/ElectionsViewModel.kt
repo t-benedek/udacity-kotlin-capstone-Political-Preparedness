@@ -34,12 +34,10 @@ class ElectionsViewModel(): ViewModel() {
 
     lateinit var saved_elections:LiveData<List<Election>?>
 
-    //TODO: Create functions to navigate to saved or upcoming election voter info
     init {
         _navigateToElectionDetail.value = null
         loadSavedElections()
         loadAllElections()
-
     }
 
     private fun loadAllElections() {
@@ -47,6 +45,7 @@ class ElectionsViewModel(): ViewModel() {
             try {
                 if (isNetworkAvailable()) {
                     _elections.value = repo.getAllElections()
+                    Log.i(TAG, "First Election is " + repo.getAllElections().get(0).name)
                 }
             } catch (e: java.lang.Exception) {
                 Log.e("ElectionsViewModel", "exception thrown: ${e.localizedMessage}")
