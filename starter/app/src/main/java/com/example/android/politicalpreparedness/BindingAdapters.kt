@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat.startActivity
 import android.net.Uri
 import android.content.Intent
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -95,16 +96,21 @@ inline fun <reified T> toTypedAdapter(adapter: ArrayAdapter<*>): ArrayAdapter<T>
 @BindingAdapter("imageUrl")
 fun bindUrlToImage(imgView: ImageView, imgUrl: String?) {
     imgUrl?.let {
-        val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
-        Glide.with(imgView.context)
-            .load(imgUri)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile)
-                    .circleCrop()
-            )
-            .into(imgView)
+        try {
+            val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
+            Glide.with(imgView.context)
+                .load(imgUri)
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.ic_profile)
+                        .error(R.drawable.ic_profile)
+                        .circleCrop()
+                )
+                .into(imgView)
+        } catch(ex : Exception) {
+            Log.e("Binding", "Failed to Load Image " + imgUrl.toString())
+        }
+
     }
 }
 
